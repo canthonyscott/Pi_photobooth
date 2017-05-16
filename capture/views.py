@@ -11,5 +11,5 @@ class CapturePhoto(View):
         return HttpResponse("Link working")
 
     def post(self, request):
-        # todo capture image, get link to file, render templaet again with photo:yes context
+        # todo capture image, get link to file, render templaet again with photo:yes context.
         pass
