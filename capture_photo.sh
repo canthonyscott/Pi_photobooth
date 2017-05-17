@@ -1,5 +1,5 @@
 #!/bin/bash
 
-gphoto2 --capture-image-and-download --filename /home/pi/temp/photo.jpg --force-overwrite
+gphoto2 --capture-image-and-download --filename $1 --force-overwrite
 
 
