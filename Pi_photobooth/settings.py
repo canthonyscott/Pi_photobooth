@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&!d#4#)o*ms_pm9$45j(9-@^uq3+9itrynoz9)&nvjpa0f+j@f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -119,14 +120,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/photos/'
 
 # Where I want to collect static files for serving
-STATIC_ROOT = '/home/anthony/deploy/static'
+STATIC_ROOT = '/home/pi/PHOTOBOOTH/static'
+MEDIA_ROOT = '/home/pi/PHOTOBOOTH/photos'
 
 # locations of other static files, i.e. where the saved photos will be
-STATICFILES_DIRS = [
-    # path where images should be stored
-    # '/home/anthony/deploy/static/',
-    '/home/anthony/deploy/photos/',
-
-]

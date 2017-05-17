@@ -20,16 +20,16 @@ class CapturePhoto(View):
 
     def post(self, request):
 
-        script_loc = os.path.join(BASE_DIR, 'dummy_capture.sh')
+        script_loc = os.path.join(BASE_DIR, 'capture_photo.sh')
 
         # get string timestamp
-        # timestamp = str(int(time.time()))
-        # filename = 'image-' + timestamp + '.jpg'
-        filename = 'test.jpg' # TESTING FOR DEV
+        timestamp = str(int(time.time()))
+        filename = 'IMAGE-' + timestamp + '.jpg'
+        # filename = 'test.jpg' # TESTING FOR DEV
         # generate file name
-        file_loc = '/home/anthony/deploy/photos/%s' % filename
+        file_loc = '/home/pi/PHOTOBOOTH/photos/%s' % filename
         # capture image and save to static dir
         subprocess.call([script_loc, file_loc])
 
-        url = static(filename)
+        url = '/photos/' + filename
         return HttpResponse(url)
