@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main_js.js' %}"></script>
 
 </head>
 <body>
@@ -20,11 +21,29 @@
     <div class="row">
         <div class="col-md-12 main_screen">
 
-            <button class="btn btn-block btn-success btn-lg cap_btn">Take a Photo!</button>
+            <button id="cap-btn" class="btn btn-block btn-success btn-lg cap_btn">Take a Photo!</button>
 
         </div>
     </div>
 </div>
+
+
+   <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <img class="img-responsive" id="modalPhoto" src="" alt="Popup Image">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END MODAL-->
+
 
 </body>
 </html>
