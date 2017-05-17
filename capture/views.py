@@ -8,7 +8,7 @@ class CapturePhoto(View):
     def get(self, request):
         # todo render template containing a Big Button with some JS, and pass a photo:no context to template
 
-        return HttpResponse("Link working")
+        return render(request, 'capture/capture.html', {'photo':False})
 
     def post(self, request):
         # todo capture image, get link to file, render templaet again with photo:yes context.
