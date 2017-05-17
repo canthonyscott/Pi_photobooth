@@ -40,6 +40,7 @@ $(document).ready(function () {
 
     function display_photo(addr) {
         console.log("addr rec: ", addr);
+        $('#cap-btn').text("Please Wait....");
         // set modal src to an image and display it for a few seconds
             $('#modalPhoto').attr('src', addr);
             $('#myModal').modal('toggle');
