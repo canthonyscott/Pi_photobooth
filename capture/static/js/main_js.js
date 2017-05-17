@@ -22,9 +22,8 @@ $(document).ready(function () {
                 //POST REQUEST TO SERVER
 
                 $.post('', function (data) {
-                    console.log(data);
-                    display_photo('');
-                    reset_button();
+                    // console.log(data);
+                    display_photo(data);
                 });
 
 
@@ -43,13 +42,14 @@ $(document).ready(function () {
         console.log("addr rec: ", addr);
         // set modal src to an image and display it for a few seconds
             $('#modalPhoto').attr('src', addr);
-            $('#myModal').modal('toggle')
+            $('#myModal').modal('toggle');
         var countdown = 5;
         setInterval(function () {
             countdown--;
             // hide modal after 5 seconds
             if (countdown == 0){
-                $('#myModal').modal('hide')
+                $('#myModal').modal('hide');
+                reset_button();
 
             }
         }, 1000);

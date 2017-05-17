@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&!d#4#)o*ms_pm9$45j(9-@^uq3+9itrynoz9)&nvjpa0f+j@f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -121,10 +121,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Where I want to collect static files for serving
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/home/anthony/deploy/static'
 
 # locations of other static files, i.e. where the saved photos will be
 STATICFILES_DIRS = [
-    # todo change this to 1TB HDD storage
-    '/var/www/static/',
+    # path where images should be stored
+    # '/home/anthony/deploy/static/',
+    '/home/anthony/deploy/photos/',
+
 ]

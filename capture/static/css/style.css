@@ -11,3 +11,25 @@
 body {
     background-color: black;
 }
+
+.modal-fullscreen .modal-dialog {
+  margin: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+.modal-fullscreen .modal-content {
+  background: transparent;
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.modal-fullscreen {
+  background: transparent;
+}
+
+.img-responsive {
+    max-height: 95vh;
+}
