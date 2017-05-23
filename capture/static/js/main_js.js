@@ -10,6 +10,8 @@ $(document).ready(function () {
     // Execute when Take a Photo button pressed
     $('#cap-btn').click(function () {
         console.log("Capture btn clicked!");
+        // todo stop responding to touch after touch ack
+        $('#cap-btn').attr("disabled", true);
 
         var countdown = 5;
         $('#cap-btn').text(countdown);
@@ -35,6 +37,7 @@ $(document).ready(function () {
 
 
     function reset_button(){
+        $('#cap-btn').removeAttr("disabled");
         $('#cap-btn').text('Take a Photo!');
     }
 
