@@ -21,6 +21,7 @@ class CapturePhoto(View):
     def post(self, request):
 
         script_loc = os.path.join(BASE_DIR, 'capture_photo.sh')
+        copy_script = os.path.join(BASE_DIR, 'copy_photo.sh')
 
         # get string timestamp
         timestamp = str(int(time.time()))
@@ -30,6 +31,12 @@ class CapturePhoto(View):
         file_loc = '/home/pi/PHOTOBOOTH/photos/%s' % filename
         # capture image and save to static dir
         subprocess.call([script_loc, file_loc])
+
+        # copy to external HDD
+        try:
+            subprocess.call([copy_script, file_loc])
+        except:
+            print("Can't copy file")
 
         url = '/photos/' + filename
         return HttpResponse(url)
