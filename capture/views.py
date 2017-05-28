@@ -51,7 +51,6 @@ class CapturePhoto(View):
         except:
             logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
 
-            print("Can't copy file")
 
         url = '/photos/' + filename
         logging.info(str(datetime.datetime.now()) + ": sending url: %s" % url)
