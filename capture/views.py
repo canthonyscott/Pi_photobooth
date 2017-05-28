@@ -39,9 +39,19 @@ class CapturePhoto(View):
         # filename = 'test.jpg' # TESTING FOR DEV
         # generate file name
         file_loc = '/home/pi/PHOTOBOOTH/photos/%s' % filename
+
         # capture image and save to static dir
-        # todo handle error of photo not capturing because user is too close
-        subprocess.call([script_loc, file_loc])
+        proc = subprocess.Popen([script_loc, file_loc], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, errs = proc.communicate(timeout=15)
+
+        errs = str(errs)
+        if errs.find('ERROR') != -1:
+            # todo handle this error of not focusing
+            logging.error(str(datetime.datetime.now()) + ": Camera couldn't focus")
+            return HttpResponse(1)
+        elif errs.find('No camera found'):
+            logging.error(str(datetime.datetime.now()) + ": CAMERA NOT FOUND")
+            return HttpResponse(2)
 
         # copy to external HDD
         try:

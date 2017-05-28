@@ -10,7 +10,6 @@ $(document).ready(function () {
     // Execute when Take a Photo button pressed
     $('#cap-btn').click(function () {
         console.log("Capture btn clicked!");
-        // todo stop responding to touch after touch ack
         $('#cap-btn').attr("disabled", true);
 
         var countdown = 5;
@@ -22,10 +21,14 @@ $(document).ready(function () {
             }
             else if (countdown == 0){
                 //POST REQUEST TO SERVER
-
                 $.post('', function (data) {
                     // console.log(data);
-                    display_photo(data);
+                    if (data > 0){
+                        notify_error(data);
+                    }
+                    else {
+                        display_photo(data);
+                    }
                 });
 
 
@@ -56,6 +59,25 @@ $(document).ready(function () {
                 reset_button();
 
             }
+        }, 1000);
+    }
+    
+    function notify_error(code) {
+        $('#cap-btn').addClass('btn-danger');
+        if (code == 1){
+            $('#cap-btn').text("Too close, back up");
+        }
+        else if (code == 2){
+            $('#cap-btn').text("Get Anthony");
+        }
+        var countdown = 6
+        setInterval(function () {
+            countdown--;
+            if (countdown == 0){
+               $('#cap-btn').removeClass('btn-danger');
+               reset_button();
+            }
+
         }, 1000);
     }
 
