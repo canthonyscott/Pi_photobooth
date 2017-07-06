@@ -55,7 +55,7 @@ class CapturePhoto(View):
         # create thumbnail for quick display
         new_loc = '/home/pi/PHOTOBOOTH/photos/thumbs/%s' % filename
         image = Image.open(file_loc)
-        new_image = image.resize((300, 300))
+        new_image = image.resize((300, 200))
         new_image.save(new_loc)
 
         # upload photo to AWS bucket
