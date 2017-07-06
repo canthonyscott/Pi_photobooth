@@ -10,6 +10,7 @@ from Pi_photobooth.settings import BASE_DIR
 import logging
 import datetime
 import boto3
+from PIL import Image
 
 
 logging.basicConfig(filename=os.path.join(BASE_DIR, 'logging.txt'), level=logging.INFO)
@@ -51,13 +52,25 @@ class CapturePhoto(View):
         except:
             logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
 
+        # create thumbnail for quick display
+        new_loc = '/home/pi/PHOTOBOOTH/photos/thumbs/%s' % filename
+        image = Image.open(file_loc)
+        new_image = image.resize((300, 300))
+        new_image.save(new_loc)
+
         # upload photo to AWS bucket
+        # todo see if this can be done async
         try:
             s3 = boto3.resource('s3')
             bucket = s3.Bucket('photobooth-autumn-anthony')
+            # upload full size image
             bucket.upload_file(file_loc, filename,
                                {'ACL': 'public-read', 'ContentType': "image/jpeg"})
-            logging.info("Image successfully uploaded to S3")
+            # upload thumbnail
+            bucket.upload_file(new_loc, 'thumbs/%s' % filename,
+                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
+
+            logging.info("Images successfully uploaded to S3")
         except:
             logging.error("Error uploading to S3")
 
