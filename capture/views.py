@@ -11,6 +11,7 @@ import logging
 import datetime
 import boto3
 from PIL import Image
+from multiprocessing import Process, Queue
 
 
 logging.basicConfig(filename=os.path.join(BASE_DIR, 'logging.txt'), level=logging.INFO)
@@ -63,13 +64,25 @@ class CapturePhoto(View):
             logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
 
         # create thumbnail for quick display
+        logging.info(str(datetime.datetime.now()) + ": Creating thumbnail and saving")
         new_loc = '/home/pi/PHOTOBOOTH/photos/thumbs/%s' % filename
         image = Image.open(file_loc)
         new_image = image.resize((300, 200))
         new_image.save(new_loc)
 
         # upload photo to AWS bucket
-        # todo see if this can be done async
+        logging.info(str(datetime.datetime.now()) + ": Connecting to AWS")
+        queue = Queue
+        p = Process(target=self.upload_to_s3, args=(file_loc, new_loc, filename,))
+        p.start()
+
+        logging.info(str(datetime.datetime.now()) + ": generating url for display")
+        url = '/photos/' + filename
+        logging.info(str(datetime.datetime.now()) + ": sending url: %s" % url)
+
+        return HttpResponse(url)
+
+    def upload_to_s3(self, file_loc, new_loc, filename):
         try:
             s3 = boto3.resource('s3')
             bucket = s3.Bucket('photobooth-autumn-anthony')
@@ -83,8 +96,7 @@ class CapturePhoto(View):
             logging.info("Images successfully uploaded to S3")
         except:
             logging.error("Error uploading to S3")
+            return False
 
-        url = '/photos/' + filename
-        logging.info(str(datetime.datetime.now()) + ": sending url: %s" % url)
+        return True
 
-        return HttpResponse(url)
