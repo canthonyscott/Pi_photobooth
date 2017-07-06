@@ -9,6 +9,7 @@ import time
 from Pi_photobooth.settings import BASE_DIR
 import logging
 import datetime
+import boto3
 
 
 logging.basicConfig(filename=os.path.join(BASE_DIR, 'logging.txt'), level=logging.INFO)
@@ -36,7 +37,6 @@ class CapturePhoto(View):
         filename = 'IMAGE-' + timestamp + '.jpg'
         logging.info(str(datetime.datetime.now()) + ": Filename generated: " + filename)
 
-        # filename = 'test.jpg' # TESTING FOR DEV
         # generate file name
         file_loc = '/home/pi/PHOTOBOOTH/photos/%s' % filename
         # capture image and save to static dir
@@ -51,6 +51,15 @@ class CapturePhoto(View):
         except:
             logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
 
+        # upload photo to AWS bucket
+        try:
+            s3 = boto3.resource('s3')
+            bucket = s3.Bucket('photobooth-autumn-anthony')
+            bucket.upload_file(file_loc, filename,
+                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
+            logging.info("Image successfully uploaded to S3")
+        except:
+            logging.error("Error uploading to S3")
 
         url = '/photos/' + filename
         logging.info(str(datetime.datetime.now()) + ": sending url: %s" % url)
