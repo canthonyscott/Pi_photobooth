@@ -49,7 +49,7 @@ class CapturePhoto(View):
             # todo handle this error of not focusing
             logging.error(str(datetime.datetime.now()) + ": Camera couldn't focus")
             return HttpResponse(1)
-        elif errs.find('No camera found'):
+        elif errs.find('No camera found') != -1:
             logging.error(str(datetime.datetime.now()) + ": CAMERA NOT FOUND")
             return HttpResponse(2)
 

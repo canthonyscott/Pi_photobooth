@@ -50,7 +50,7 @@ $(document).ready(function () {
         // set modal src to an image and display it for a few seconds
             $('#modalPhoto').attr('src', addr);
             $('#myModal').modal('toggle');
-        var countdown = 10;
+        var countdown = 8;
         setInterval(function () {
             countdown--;
             // hide modal after 5 seconds
