@@ -1,3 +1,8 @@
+## Requirements
+* Python3+
+* gphoto2 and compatible camera
+* all packages in requirements.txt
+
 ## Quick Start
 
 1. Clone the repo.
