@@ -13,5 +13,5 @@
 
 
 ## Notes
-* If you plan to deploy this on a public server makes sure to change the `SECRET_KEY`. This should always remain a secret. I didn't remove it from this repo because this only ever ran locally on my Raspberry Pi.
+* If you plan to deploy this on a public server, which you probably shouldn't, make sure to change the `SECRET_KEY`. This should always remain a secret. I didn't remove it from this repo because this only ever ran locally on my Raspberry Pi.
 * Unfortunately because I was making this in a time crunch there are some variables and directories that are hard coded. To get this working full on your raspberry pi you will likely need to edit some locations in the python files. One day I hope to return to this and clean it up to be used more generally. Im thinking docker container.
