@@ -93,8 +93,9 @@ class CapturePhoto(View):
                                {'ACL': 'public-read', 'ContentType': "image/jpeg"})
 
             logging.info("Images successfully uploaded to S3")
-        except:
+        except Exception as e:
             logging.error("Error uploading to S3")
+            logging.error(e)
             return False
 
         return True
