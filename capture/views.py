@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.contrib.staticfiles.templatetags.staticfiles import static
 import subprocess
 import os
 import time
