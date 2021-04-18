@@ -84,7 +84,7 @@ class CapturePhoto(View):
     def upload_to_s3(self, file_loc, new_loc, filename):
         try:
             s3 = boto3.resource('s3')
-            bucket = s3.Bucket('photobooth-autumn-anthony')
+            bucket = s3.Bucket('myphotobooth.live')
             # upload full size image
             bucket.upload_file(file_loc, filename,
                                {'ACL': 'public-read', 'ContentType': "image/jpeg"})
