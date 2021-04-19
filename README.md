@@ -1,5 +1,5 @@
 ## Requirements
-* Python3+
+* Python3.7+
 * gphoto2 and compatible camera
 * all packages in requirements.txt
 
