@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.contrib.staticfiles.templatetags.staticfiles import static
 import subprocess
 import os
 import time
@@ -12,11 +11,11 @@ import datetime
 import boto3
 from PIL import Image
 from multiprocessing import Process, Queue
+from capture.apps import UploadWorker
 
-
-logging.basicConfig(filename=os.path.join(BASE_DIR, 'logging.txt'), level=logging.INFO)
-
-
+logging = logging.getLogger()
+upload_worker = UploadWorker()
+upload_worker.start_worker()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CapturePhoto(View):
@@ -26,13 +25,11 @@ class CapturePhoto(View):
 
         return render(request, 'capture/capture.html', {'photo':False})
 
-
     def post(self, request):
         logging.info(str(datetime.datetime.now()) + ": CapturePhoto View - POST called")
 
 
         script_loc = os.path.join(BASE_DIR, 'capture_photo.sh')
-        copy_script = os.path.join(BASE_DIR, 'copy_photo.sh')
 
         # get string timestamp
         timestamp = str(int(time.time()))
@@ -55,26 +52,16 @@ class CapturePhoto(View):
             logging.error(str(datetime.datetime.now()) + ": CAMERA NOT FOUND")
             return HttpResponse(2)
 
-        # copy to external HDD
-        try:
-            subprocess.call([copy_script, file_loc])
-            logging.info(str(datetime.datetime.now()) + ": file coped to external drive")
-
-        except:
-            logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
-
         # create thumbnail for quick display
         logging.info(str(datetime.datetime.now()) + ": Creating thumbnail and saving")
         new_loc = '/home/pi/PHOTOBOOTH/photos/thumbs/%s' % filename
         image = Image.open(file_loc)
-        new_image = image.resize((300, 200))
+        new_image = image.resize((600, 400))
         new_image.save(new_loc)
 
         # upload photo to AWS bucket
-        logging.info(str(datetime.datetime.now()) + ": Connecting to AWS")
-        queue = Queue
-        p = Process(target=self.upload_to_s3, args=(file_loc, new_loc, filename,))
-        p.start()
+        logging.info("Putting file in queue...")
+        upload_worker.queue.put((file_loc, new_loc, filename))
 
         logging.info(str(datetime.datetime.now()) + ": generating url for display")
         url = '/photos/' + filename
@@ -82,21 +69,4 @@ class CapturePhoto(View):
 
         return HttpResponse(url)
 
-    def upload_to_s3(self, file_loc, new_loc, filename):
-        try:
-            s3 = boto3.resource('s3')
-            bucket = s3.Bucket('myphotobooth.live')
-            # upload full size image
-            bucket.upload_file(file_loc, filename,
-                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
-            # upload thumbnail
-            bucket.upload_file(new_loc, 'thumbs/%s' % filename,
-                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
-
-            logging.info("Images successfully uploaded to S3")
-        except:
-            logging.error("Error uploading to S3")
-            return False
-
-        return True
 
