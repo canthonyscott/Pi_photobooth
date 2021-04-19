@@ -16,7 +16,7 @@ class UploadWorker:
         self.logger = logging.getLogger()
 
     def upload_to_s3(self, file_loc, new_loc, filename, logger):
-        BUCKET = 'myphotobooth.live'
+        BUCKET = os.getenv("BUCKET")
         logging.info("Attempting s3 upload")
         try:
             session = boto3.Session(aws_access_key_id=os.getenv("AWSKEY"),
