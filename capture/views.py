@@ -12,9 +12,7 @@ import boto3
 from PIL import Image
 from multiprocessing import Process, Queue
 
-
 logging.basicConfig(filename=os.path.join(BASE_DIR, 'logging.txt'), level=logging.INFO)
-
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -24,7 +22,6 @@ class CapturePhoto(View):
         logging.info(str(datetime.datetime.now()) + ": CapturePhoto View - GET called")
 
         return render(request, 'capture/capture.html', {'photo':False})
-
 
     def post(self, request):
         logging.info(str(datetime.datetime.now()) + ": CapturePhoto View - POST called")
@@ -55,18 +52,18 @@ class CapturePhoto(View):
             return HttpResponse(2)
 
         # copy to external HDD
-        try:
-            subprocess.call([copy_script, file_loc])
-            logging.info(str(datetime.datetime.now()) + ": file coped to external drive")
-
-        except:
-            logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
+        # try:
+        #     subprocess.call([copy_script, file_loc])
+        #     logging.info(str(datetime.datetime.now()) + ": file coped to external drive")
+        #
+        # except:
+        #     logging.error(str(datetime.datetime.now()) + ": Failed to copy %s to drive" % file_loc)
 
         # create thumbnail for quick display
         logging.info(str(datetime.datetime.now()) + ": Creating thumbnail and saving")
         new_loc = '/home/pi/PHOTOBOOTH/photos/thumbs/%s' % filename
         image = Image.open(file_loc)
-        new_image = image.resize((300, 200))
+        new_image = image.resize((600, 400))
         new_image.save(new_loc)
 
         # upload photo to AWS bucket
@@ -82,17 +79,19 @@ class CapturePhoto(View):
         return HttpResponse(url)
 
     def upload_to_s3(self, file_loc, new_loc, filename):
+        BUCKET = 'myphotobooth.live'
         try:
-            session = boto3.Session(profile_name="default")
-            s3 = session.resource('s3')
-            # s3 = boto3.resource('s3')
-            bucket = s3.Bucket('myphotobooth.live')
+            logging.info("Attempting s3 upload")
+            session = boto3.Session(aws_access_key_id='AKIAXXIL6HT64FXLCHDP',
+                                    aws_secret_access_key='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')
+            s3 = session.client("s3")
+
             # upload full size image
-            bucket.upload_file(file_loc, filename,
-                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
+            s3.upload_file(file_loc, BUCKET, filename,
+                               ExtraArgs={'ACL': 'public-read', 'ContentType': "image/jpeg"})
             # upload thumbnail
-            bucket.upload_file(new_loc, 'thumbs/%s' % filename,
-                               {'ACL': 'public-read', 'ContentType': "image/jpeg"})
+            s3.upload_file(new_loc, BUCKET, 'thumbs/%s' % filename,
+                               ExtraArgs={'ACL': 'public-read', 'ContentType': "image/jpeg"})
 
             logging.info("Images successfully uploaded to S3")
         except Exception as e:
