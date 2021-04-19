@@ -82,8 +82,8 @@ class CapturePhoto(View):
         BUCKET = 'myphotobooth.live'
         try:
             logging.info("Attempting s3 upload")
-            session = boto3.Session(aws_access_key_id='AKIAXXIL6HT64FXLCHDP',
-                                    aws_secret_access_key='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')
+            session = boto3.Session(aws_access_key_id=os.getenv("AWSKEY"),
+                                    aws_secret_access_key=os.getenv("AWSSECRET"))
             s3 = session.client("s3")
 
             # upload full size image
