@@ -68,7 +68,7 @@ $(document).ready(function () {
             $('#cap-btn').text("Too close, back up");
         }
         else if (code == 2){
-            $('#cap-btn').text("Get Anthony");
+            $('#cap-btn').text("Camera error");
         }
         var countdown = 6
         setInterval(function () {
